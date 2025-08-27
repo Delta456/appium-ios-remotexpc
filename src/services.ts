@@ -3,11 +3,14 @@ import { strongbox } from '@appium/strongbox';
 import { RemoteXpcConnection } from './lib/remote-xpc/remote-xpc-connection.js';
 import { TunnelManager } from './lib/tunnel/index.js';
 import { TunnelApiClient } from './lib/tunnel/tunnel-api-client.js';
+import ServiceConnection from './service-connection.js';
 import type {
+  AFCServiceWithConnection,
   DiagnosticsServiceWithConnection,
   NotificationProxyServiceWithConnection,
   SyslogService as SyslogServiceType,
 } from './lib/types.js';
+import { AFCService } from './services/ios/afc-service/index.js';
 import DiagnosticsService from './services/ios/diagnostic-service/index.js';
 import { NotificationProxyService } from './services/ios/notification-proxy/index.js';
 import SyslogService from './services/ios/syslog-service/index.js';
@@ -43,6 +46,23 @@ export async function startNotificationProxyService(
     notificationProxyService: new NotificationProxyService([
       tunnelConnection.host,
       parseInt(notificationProxyService.port, 10),
+    ]),
+  };
+}
+
+export async function startAFCService(
+  udid: string,
+): Promise<AFCServiceWithConnection> {
+  const { remoteXPC, tunnelConnection } = await createRemoteXPCConnection(udid);
+  const afcService = remoteXPC.findService(
+    AFCService.RSD_SERVICE_NAME,
+  );
+
+  return {
+    remoteXPC: remoteXPC as RemoteXpcConnection,
+    afcService: new AFCService([
+      tunnelConnection.host,
+      parseInt(afcService.port, 10),
     ]),
   };
 }

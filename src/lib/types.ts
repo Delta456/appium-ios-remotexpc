@@ -250,6 +250,17 @@ export interface NotificationProxyServiceWithConnection {
 }
 
 /**
+ * Represents an AFCService instance with its associated RemoteXPC connection
+ * This allows callers to properly manage the connection lifecycle
+ */
+export interface AFCServiceWithConnection {
+  /** The AFCService instance */
+  afcService: AFCService;
+  /** The RemoteXPC connection that can be used to close the connection */
+  remoteXPC: RemoteXpcConnection;
+}
+
+/**
  * Options for configuring syslog capture
  */
 export interface SyslogOptions {
@@ -347,4 +358,30 @@ export interface SyslogServiceConstructor {
    * @param address Tuple containing [host, port]
    */
   new (address: [string, number]): SyslogService;
+}
+
+/**
+ * Represents the AFC (Apple File Conduit) Service
+ */
+export interface AFCService extends BaseService {
+  /**
+   * List directory contents
+   * @param filename The directory path to list
+   * @returns Promise resolving to an array of filenames (excluding '.' and '..')
+   */
+  // listDir(filename: string): Promise<string[]>;
+
+  /**
+   * Get file or directory statistics
+   * @param filename The path to get statistics for
+   * @returns Promise resolving to file/directory stats with converted types
+   */
+  stat(filename: string): Promise<Record<string, any>>;
+
+  /**
+   * Check if a file or directory exists
+   * @param filename The path to check for existence
+   * @returns Promise resolving to true if exists, false otherwise
+   */
+  exists(filename: string): Promise<boolean>;
 }
