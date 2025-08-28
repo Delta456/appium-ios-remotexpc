@@ -65,16 +65,17 @@ export function parseHeader(buffer: Buffer): AFCHeader {
   const magic = buffer.subarray(offset, offset + 8); // Keep as Buffer
   offset += 8;
 
-  const entireLength = Number(buffer.readBigUInt64LE(offset));
+  // Read as big-endian values to match the encoder format
+  const entireLength = Number(buffer.readBigUInt64BE(offset));
   offset += 8;
 
-  const thisLength = Number(buffer.readBigUInt64LE(offset));
+  const thisLength = Number(buffer.readBigUInt64BE(offset));
   offset += 8;
 
-  const packetNum = Number(buffer.readBigUInt64LE(offset));
+  const packetNum = Number(buffer.readBigUInt64BE(offset));
   offset += 8;
 
-  const opCode = Number(buffer.readBigUInt64LE(offset)) as AFCOpcode;
+  const opCode = Number(buffer.readBigUInt64BE(offset)) as AFCOpcode;
 
   return {
     magic,

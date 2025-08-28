@@ -21,10 +21,11 @@ export class Decoder extends Transform {
       throw new Error(`Invalid AFC packet: incorrect magic number ${magicNum.toString('hex')}`);
     }
 
-    const msgLen = this.readUInt64LE(data, 8);
-    const thisLen = this.readUInt64LE(data, 16);
-    const packetNum = this.readUInt64LE(data, 24);
-    const opCode = this.readUInt64LE(data, 32);
+    // Use big-endian reading to match the encoder's big-endian writing
+    const msgLen = Number(data.readBigUInt64BE(8));
+    const thisLen = Number(data.readBigUInt64BE(16));
+    const packetNum = Number(data.readBigUInt64BE(24));
+    const opCode = Number(data.readBigUInt64BE(32));
     const headerPayload = data.slice(AFC_HEADER_SIZE, thisLen);
     const content = data.slice(thisLen, msgLen);
 
@@ -42,11 +43,5 @@ export class Decoder extends Transform {
     };
 
     this.push(afcPacket);
-
-  }
-
-  readUInt64LE (buffer: Buffer, index: number): number {
-    // Ignore the first 4 bytes since we don't do anything with longs
-    return buffer.readUInt32LE(index);
   }
 }

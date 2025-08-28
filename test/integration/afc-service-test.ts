@@ -39,7 +39,7 @@ describe('AFC Service', function () {
       // eslint-disable-next-line no-useless-catch
       try {
        // const result = await afcService.exists('false');
-        const stat = await afcService.stat('lol');
+        const stat = await afcService.stat('DCIM');
         log.info(`Stat for DCIM: ${JSON.stringify(stat)}`); // Returning stats for unknown dir!
         expect(stat.st_ifmt).to.equal('S_IFDIR');
        // expect(result).to.be.false; It should be false but returns true!

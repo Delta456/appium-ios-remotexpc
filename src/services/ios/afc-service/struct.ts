@@ -1,8 +1,8 @@
 import { AFCOpcode, AFCLinkType, AFCFileOpenMode } from './enum.js';
 
-// AFC constants
-export const AFC_MAGIC = Buffer.from('CFA6LPAA', 'ascii');
-export const AFC_HEADER_SIZE = 40; // Sizeof with 8 + 8 + 8 + 8 + 8 bytes
+// AFC constants - using the standard AFC magic bytes in correct byte order
+export const AFC_MAGIC = Buffer.from([0x43, 0x46, 0x41, 0x36, 0x4C, 0x50, 0x41, 0x41]); // 'CFA6LPAA'
+export const AFC_HEADER_SIZE = 40; // 8 + 8 + 8 + 8 + 8 bytes
 
 // AFC Header structure
 export interface AFCHeader {
